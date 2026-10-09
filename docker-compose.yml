@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+    working_dir: /app
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      SPARK_MASTER: ${SPARK_MASTER:-local[4]}
+      SPARK_LOCAL_IP: 127.0.0.1
+      # Dentro da rede Compose, localhost seria o proprio container app.
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    volumes:
+      - .:/app
+    command: ["python", "-m", "src.main", "--help"]
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.2
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.ml.enabled: "false"
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS:--Xms1g -Xmx1g}
+    ports:
+      - "127.0.0.1:9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --silent 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' >/dev/null",
+        ]
+      interval: 10s
+      timeout: 6s
+      retries: 12
+      start_period: 30s
+    mem_limit: 2g
+
+volumes:
+  elasticsearch-data:

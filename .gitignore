@@ -1,0 +1,52 @@
+# Segredos e configuracao local
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+.tox/
+.nox/
+.python-version
+
+# IDE e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dados fornecidos e artefatos locais
+*.csv
+*.parquet
+*.zip
+*.pdf
+*.tmp
+
+# Dados e relatorios gerados pelo pipeline
+/data/
+/docs/candidate_retrieval_analysis.md
+/docs/matching_strategy.md
+/docs/evaluation.md
+
+# Logs locais
+/logs/
+
+# Artefatos locais do Spark
+.sparkStaging/
+spark-warehouse/
+metastore_db/
+derby.log
+*.log
+*.crc
+_SUCCESS
